@@ -30,14 +30,21 @@ const userSchema = new mongoose.Schema({
         required: [true,`Password is a required field`] ,
         trim: true ,
         select : false   ,
-        minLength : [6,`Password must be atleast of 6 characters`]  
+        minLength : [8,`Password must be atleast of 6 characters`],
+        maxLength : 16
+    },
+    Address:{
+        type :'String',
+        required : [true,`Address is a required field`],
+        trim : true,
+        minLength: 400
 
     },
     role:{
         type:'String',
         enum: ['USER','ADMIN','StoreOwner'],
         default: 'USER'
-    }
+    },
 },{
     timestamps:true
 
