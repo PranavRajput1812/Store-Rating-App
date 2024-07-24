@@ -3,6 +3,7 @@ import user from "../models/userModel.js"
 import { configDotenv } from "dotenv"
 //import studentData from "../models/studentData.js"
 //import Company from '../models/companyModel.js'
+import store from "../models/storeModel.js"
 
 
 configDotenv()
@@ -111,7 +112,18 @@ const logout = (req,res) =>{
 }
 
 
-
+const getUserById = async (req, res) => {
+    try {
+      const userById = await user.findById(req.params.id).select('-password');
+      res.status(200).json({
+        success :true ,
+        message: `User found successfully`,
+        userById
+    })
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  };
 
 
 const changePassword = async (req,res,next) =>{
@@ -147,4 +159,4 @@ const changePassword = async (req,res,next) =>{
 
 
 
-export {register,login,logout,changePassword}
+export {register,login,logout,changePassword,getUserById}
