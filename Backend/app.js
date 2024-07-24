@@ -3,7 +3,7 @@ import cors from 'cors'
 import connectToDB from './config/dbConnection.js';
 import errorMiddleware from './middleware/errorMiddleware.js'
 import userRoute from './routes/userRoutes.js';
-import storeRoute from './routes/adminRoutes.js';
+import storeRoute from './routes/StoreRoutes.js';
 import cookieParser from 'cookie-parser';
 const app = express();
 
