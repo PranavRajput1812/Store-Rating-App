@@ -5,7 +5,10 @@ const isLoggedIn = async (req,res,next)=>{
     const {token}= req.cookies
     console.log(`TOKEN => ${token}`);
     if(!token){
-        return next(new AppError(500,`Unauthenticated, please try again`))
+        return res.status(500).json({
+            success: false ,
+            message: 'Unauthenticated, please try again'
+        });
     }
 
     const userDetails = await jwt.verify(token,process.env.SECRET)
