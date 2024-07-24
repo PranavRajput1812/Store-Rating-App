@@ -1,4 +1,3 @@
-import AppError from "../utils/errorUtils.js"
 import user from "../models/userModel.js"
 import { configDotenv } from "dotenv"
 
@@ -15,13 +14,20 @@ const register = async(req,res,next) =>{
     const {Name,email,password,Address,role} = req.body
 
     if(!Name || !email || !password ||!Address){
-        return next(new AppError(500,`All fields are required`)) 
+        return res.status(500).json({
+            success: false ,
+            message: 'All Fields are Required!'
+        });
+
     }
 
     const userExists = await user.findOne({email})
 
     if(userExists){
-        return next(new AppError(500,`User already exists !`))
+        return res.status(500).json({
+            success: false ,
+            message: 'User already exists!'
+        });
     }
     
 
@@ -34,7 +40,10 @@ const register = async(req,res,next) =>{
     })
 
     if(!newUser){
-        return next(new AppError(500,`User registration failed, please try again`))
+      return res.status(500).json({
+        success: false ,
+        message: 'User registration failed, please try again'
+    });
     }
 
     // save user in DB
@@ -62,7 +71,11 @@ const login = async (req,res,next) =>{
         const {email,password} = req.body
 
         if(!email || !password){
-            return next(new AppError(500,`All fields are required`))
+            
+            return res.status(500).json({
+                success: false ,
+                message: 'All fields are required!'
+            });
         }
 
         // getting password explicitly because it was selected as false in schema
@@ -71,7 +84,11 @@ const login = async (req,res,next) =>{
         }).select('+password')  
 
         if(!existingUser || !(await existingUser.comparePassword(password))){
-            return next(new AppError(500,`Email & Password doesnt match`))
+           
+            return res.status(500).json({
+                success: false ,
+                message: 'Email & Password doesnt match'
+            });
         }
 
         const token = await existingUser.generateJWTtoken()
@@ -117,7 +134,10 @@ const getUserById = async (req, res) => {
         userById
     })
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      res.status(500).json({
+        success :false,
+        error: err.message
+     });
     }
   };
 
@@ -127,19 +147,29 @@ const changePassword = async (req,res,next) =>{
     const {id} = req.user
     
     if(!oldPassword || !newPassword){
-        return next(new AppError(500,`All fields are mandatory`))
+        return res.status(500).json({
+            success: false ,
+            message: 'All fields are required'
+        });
     }
 
     const userExists = await user.findById(id).select('+password')
 
     if(!userExists){
-        return next(new AppError(500,`User doesnt exist`))
+        return res.status(500).json({
+            success: false ,
+            message: 'User doesnt exist'
+        });
     }
 
     const isPasswordValid = await userExists.comparePassword(oldPassword)
 
     if(!isPasswordValid){
-        return next(new AppError(500,`Old password invalid`))
+        
+        return res.status(500).json({
+            success: false ,
+            message: 'Old password invalid'
+        });
     }
 
     userExists.password = newPassword   

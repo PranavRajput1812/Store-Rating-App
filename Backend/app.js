@@ -1,7 +1,6 @@
 import express from 'express'
 import cors from 'cors'   
 import connectToDB from './config/dbConnection.js';
-import errorMiddleware from './middleware/errorMiddleware.js'
 import userRoute from './routes/userRoutes.js';
 import storeRoute from './routes/StoreRoutes.js';
 import adminRoutes from "./routes/adminRoutes.js";
@@ -35,7 +34,5 @@ app.use('/api/v1/admin',adminRoutes)
 app.all('*',(req,res)=>{    // if somebody enters url other than any route defined here 
     res.status(404).send(`Oops ! Page 404 not found !`)
 })
-
-// single middleware that can handle all the errors 
-app.use(errorMiddleware)  
+ 
 export default app;

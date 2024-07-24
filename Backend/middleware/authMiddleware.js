@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken'
-import AppError from "../utils/errorUtils.js"
 
 
 const isLoggedIn = async (req,res,next)=>{
@@ -20,7 +19,10 @@ const  authorizedRoles = (...roles) => async (req,res,next) =>{
     const currentRole = req.user.role
 
     if(!roles.includes(currentRole)){
-        return next(new AppError(500,`You do not the permission to access this route`))
+        return res.status(500).json({
+            success: false ,
+            message: 'You do not the permission to access this route!'
+        });
     }
 
     next()
