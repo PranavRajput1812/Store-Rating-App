@@ -1,4 +1,3 @@
-import AppError from "../utils/errorUtils.js"
 import { configDotenv } from "dotenv"
 import store  from "../models/storeModel.js";
 import user from "../models/userModel.js";
@@ -8,23 +7,25 @@ configDotenv();
 
 const dashBoardData = async (req, res) => {
     try {
-        const users = await user.find({});
+        let users = await user.countDocuments() ||0;
         
-        const stores = await store.find({});
+        let stores = await store.countDocuments()||0;
 
-        
+        let userSubmitedRating = await user.find({isSumbmitedRating:true}).countDocuments()||0;
 
-        if (!userCount) {
-            return res.status(500).json({
-                success: false,
-                message: 'Error!'
-            });
-        }
+
+        // if (!userCount) {
+        //     return res.status(500).json({
+        //         success: false,
+        //         message: 'Error!'
+        //     });
+        // }
         res.status(200).json({
             success: true,
             message: 'User count retrieved successfully!',
             users,
-            stores
+            stores,
+            userSubmitedRating
         });
     } catch (error) {
         res.status(500).json({
@@ -33,4 +34,4 @@ const dashBoardData = async (req, res) => {
         });
     }
 }
-export {addStore,dashBoardData};
+export {dashBoardData};
