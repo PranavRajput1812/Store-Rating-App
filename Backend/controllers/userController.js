@@ -1,10 +1,6 @@
 import AppError from "../utils/errorUtils.js"
 import user from "../models/userModel.js"
 import { configDotenv } from "dotenv"
-//import studentData from "../models/studentData.js"
-//import Company from '../models/companyModel.js'
-import store from "../models/storeModel.js"
-
 
 configDotenv()
 
