@@ -8,14 +8,14 @@ config()
 
 const userSchema = new mongoose.Schema({
     Name : {
-        type : 'String',
+        type : String,
         required : [true,`Name is required feild`],
         trim:true,
         maxLength:60,
         minLength:20
     },
     email:{
-        type:'String',
+        type:String,
         required: [true,`Email is a required field`] ,
         trim: true ,
         unique: true ,
@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
 
     },
     password:{
-        type:'String',
+        type:String,
         required: [true,`Password is a required field`] ,
         trim: true ,
         select : false   ,
@@ -34,14 +34,14 @@ const userSchema = new mongoose.Schema({
         
     },
     Address:{
-        type :'String',
+        type :String,
         required : [true,`Address is a required field`],
         trim : true,
         maxLength: 400
 
     },
     role:{
-        type:'String',
+        type:String,
         enum: ['USER','ADMIN','StoreOwner'],
         default: 'USER'
     },
