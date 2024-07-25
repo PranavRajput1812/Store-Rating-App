@@ -10,6 +10,7 @@ import UserDashboard from './Pages/UserDashBoard.jsx';
 import StoreOwnerDashboard from './Pages/StoreDashboard.jsx';
 import UserList from './Pages/UserList.jsx';
 import StoreList from './Pages/StoreList.jsx'
+import ChangePassword from './Pages/ChangePassword'
 
 function App() {
 
@@ -25,6 +26,8 @@ function App() {
       <Route path='/storeOwner-dashboard' element={<StoreOwnerDashboard/>}/>
       <Route path='/usersList' element={<UserList/>}/>
       <Route path='/storesList' element={<StoreList/>}/>
+      <Route path='/change-password' element={ <ChangePassword/> } />
+
     </Routes>
   )
 }

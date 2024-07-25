@@ -32,10 +32,7 @@ function Signin() {
     }
 
     const response = await dispatch(login(signinData))
-    // console.log(response);
-    // if(response?.payload?.data?.success){
-    //   navigate('/')
-    // }
+   
     if (response?.payload?.data?.success) {
       const userRole = response.payload.data.existingUser.role;
       let existingId =  response.payload.data.existingUser.email;
@@ -47,7 +44,7 @@ function Signin() {
       if(userRole =='USER'){
         navigate('/user-dashboard')
       }
-      if (userRole == 'StoreOwner') {
+      if (userRole == 'STOREOWNER') {
         navigate('/storeOwner-dashboard',{ state: { userRole, existingId } });
       }
     } else {
