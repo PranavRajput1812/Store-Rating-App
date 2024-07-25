@@ -16,9 +16,21 @@ export const getDashboardData = createAsyncThunk('/admin/get',async()=>{
             success:'Dashboard Data Loaded Successfully...',
             error : 'Failed to load Dashboard Data'
         })
-        console.log('response:',response);
-        let f =(await response).data
-        console.log(f);
+        //console.log('response:',response);
+        return (await response).data
+    } catch (error) {
+        toast.error(error?.response?.data?.message)
+    }
+})
+
+export const createStore = createAsyncThunk('/store',async()=>{
+    try {
+        const response = axiosInstance.post('store/add-Store');
+        toast.promise(response,{
+            loading:'Creating Store...',
+            success:'Store Created Successfully...',
+            error : 'Failed to create store'
+        })
         return (await response).data
     } catch (error) {
         toast.error(error?.response?.data?.message)
@@ -38,6 +50,8 @@ const adminSlice = createSlice({
             console.log('data',state.dashBoardData);
            
         })
+
+
     }
 })
 

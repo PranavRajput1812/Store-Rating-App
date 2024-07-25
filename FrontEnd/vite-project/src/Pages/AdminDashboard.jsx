@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // import { fetchUsers, fetchStores } from '../Redux/Slices/adminSlice';
 import { logout } from '../Redux/Slices/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { getDashboardData } from '../Redux/Slices/adminSlice';
+import { getDashboardData,createStore } from '../Redux/Slices/adminSlice';
 import toast from 'react-hot-toast';
 
 const AdminDashboard = () => {
@@ -16,6 +16,13 @@ const AdminDashboard = () => {
     password :"",
     Address : ""
   })
+
+  const [storeDetails, setStoreDetails] = useState({
+    Name: "",
+    email: "",
+    Address: "",
+    Rating: ""
+  });
 
   let dashBoardData = useSelector(state => state.admin.dashBoardData);
   console.log(dashBoardData);
@@ -35,6 +42,14 @@ const AdminDashboard = () => {
         [name]:value
     })
   }
+
+  const handleStoreInput = (e) => {
+    const { name, value } = e.target;
+    setStoreDetails({
+      ...storeDetails,
+      [name]: value
+    });
+  };
 
   async function handleFormSubmit (e) {
     e.preventDefault()
@@ -66,6 +81,35 @@ const AdminDashboard = () => {
     }
 
   }
+
+  async function handleStoreFormSubmit(e) {
+    e.preventDefault();
+
+    if (!storeDetails.Name || !storeDetails.email || !storeDetails.Address || !storeDetails.Rating) {
+      toast.error('All fields are required');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('Name', storeDetails.Name);
+    formData.append('email', storeDetails.email);
+    formData.append('Address', storeDetails.Address);
+    formData.append('Rating', storeDetails.Rating);
+
+    const response = await dispatch(createStore(formData));
+
+    if (response?.payload?.success) {
+      setStoreDetails({
+        Name: "",
+        email: "",
+        Address: "",
+        Rating: "",
+      });
+      navigate('/admin-dashboard');
+    }
+  }
+
+
   async function loadDashBoardData () {
     await dispatch(getDashboardData())
 }
@@ -75,7 +119,7 @@ const AdminDashboard = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/login');
+    navigate('/');
   };
 
   return (
@@ -229,6 +273,68 @@ const AdminDashboard = () => {
         <div className="bg-white shadow-md rounded-lg p-6">
           <h3 className="text-xl font-semibold text-gray-700 mb-4">Store Management</h3>
           {/* Render store management table and forms here */}
+          <form onSubmit={handleStoreFormSubmit} className='bg-white shadow-lg rounded-lg p-8 w-full max-w-md'>
+            <h1 className='text-center text-2xl font-bold mb-6'>Create Store</h1>
+
+            <div className='mb-6'>
+              <input
+                type='text'
+                required
+                name='Name'
+                id='StoreName'
+                placeholder='Enter store name...'
+                className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
+                onChange={handleStoreInput}
+                value={storeDetails.Name}
+              />
+            </div>
+
+            <div className='mb-4'>
+              <input
+                type='email'
+                required
+                name='email'
+                id='StoreEmail'
+                placeholder='Enter store email...'
+                className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
+                onChange={handleStoreInput}
+                value={storeDetails.email}
+              />
+            </div>
+
+            <div className='mb-6'>
+              <input
+                type='text'
+                required
+                name='Address'
+                id='StoreAddress'
+                placeholder='Enter store address...'
+                className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
+                onChange={handleStoreInput}
+                value={storeDetails.Address}
+              />
+            </div>
+
+            <div className='mb-6'>
+              <input
+                type='text'
+                required
+                name='Rating'
+                id='StoreRating'
+                placeholder='Enter store rating...'
+                className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
+                onChange={handleStoreInput}
+                value={storeDetails.Rating}
+              />
+            </div>
+
+            <button
+              className='w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all'
+              type='submit'
+            >
+              Create Store
+            </button>
+          </form>
         </div>
       </div>
     </div>
