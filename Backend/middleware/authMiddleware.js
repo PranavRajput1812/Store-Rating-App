@@ -2,6 +2,9 @@ import jwt from 'jsonwebtoken'
 
 
 const isLoggedIn = async (req,res,next)=>{
+    try {
+        
+    
     const {token}= req.cookies
     console.log(`TOKEN => ${token}`);
     if(!token){
@@ -16,6 +19,12 @@ const isLoggedIn = async (req,res,next)=>{
     req.user = userDetails
 
     next() 
+} catch (error) {
+       return res.status(500).json({
+        success:false,
+        message:error.message
+       }) 
+}
 }
  
 const  authorizedRoles = (...roles) => async (req,res,next) =>{

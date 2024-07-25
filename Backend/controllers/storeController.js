@@ -123,10 +123,10 @@ const addStore = async(req,res)=>{
 const getUserThatRateStore = async(req,res)=>{
  // let storeId = req.params.storeId;
   try {
-    let storeId = req.params.storeId;
-    console.log(storeId);
+    let email = req.params.email;
+    console.log(email);
     // Find the store by ID
-    let storeUser = await store.findById(storeId);
+    let storeUser = await store.findOne({email});
     console.log(storeUser);
     if (!storeUser) {
       return res.status(404).json({ msg: 'Store not found' });
@@ -142,7 +142,8 @@ const getUserThatRateStore = async(req,res)=>{
       success: true,
       message: 'Users who rated the store retrieved successfully',
       users,
-      averageRating
+      averageRating,
+      storeUser
     });
   } catch (err) {
     console.error(err.message);

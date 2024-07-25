@@ -7,7 +7,7 @@
     // import { useLocation } from 'react-router-dom';
     import { logout } from '../Redux/Slices/authSlice';
     import { useDispatch } from 'react-redux';
-    import { Navigate, useNavigate } from 'react-router-dom';
+    import { useNavigate } from 'react-router-dom';
     function UserDashboard() {
         const [storeData, setStoreData] = useState([]);
         const [searchTerm, setSearchTerm] = useState('');
