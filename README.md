@@ -1,4 +1,4 @@
-# MERN Stack Rating Platform
+# MERN Stack Rating Platform 🚀🚀🚀
 
 Welcome to the MERN Stack Rating Platform! This web application allows users to rate stores, view ratings, and manage user roles. It leverages the power of the MERN stack, which includes MongoDB, Express.js, React.js, and Node.js. Whether you're an admin, a normal user, or a store owner, this platform provides a comprehensive set of functionalities tailored to your needs.
 
