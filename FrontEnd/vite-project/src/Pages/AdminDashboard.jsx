@@ -138,6 +138,13 @@ const AdminDashboard = () => {
       console.error(error);
     }
   }
+  const handleShowUsers = () => {
+    navigate('/usersList');
+  };
+
+  const handleShowStores = () => {
+    navigate('/storesList');
+  };
 
   const handleLogout = () => {
     dispatch(logout());
@@ -162,6 +169,12 @@ const AdminDashboard = () => {
             <p className="text-3xl text-indigo-500">{dashBoardData.userSubmitedRating}</p>
           </div>
         </div>
+        <button onClick={handleShowUsers} className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200">
+            Show User List
+          </button>
+          <button onClick={handleShowStores} className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-200 ml-20">
+            Show Store List
+          </button>
 
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl font-bold text-gray-800">Management Sections</h2>
