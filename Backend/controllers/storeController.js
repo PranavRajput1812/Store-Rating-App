@@ -59,14 +59,25 @@ const rateStore = async (req,res)=>{
     }
 }
 const addStore = async(req,res)=>{
+  try {
+    
+  
     const{Name,email,Address,rating} = req.body;
 
     if(!Name || !email ||!Address){
-        return next(new AppError(500,`All fields are required`)) 
+       // return next(new AppError(500,`All fields are required`))
+      return res.status(500).json({
+        success: false ,
+        message: 'All fields are required'
+    })  
     }
     const storeExists = await store.findOne({email})
     if(storeExists){
-        return next(new AppError(500,`User already exists !`))
+       // return next(new AppError(500,`User already exists !`))
+      return res.status(500).json({
+        success: false ,
+        message: "User already exists !"
+    }) 
     }
     const newStore = await store.create({
         Name,
@@ -76,16 +87,27 @@ const addStore = async(req,res)=>{
     })
    // console.log(newStore);
     if(!newStore){
-        return next(new AppError(500,`Store registration failed, please try again`))
+       // return next(new AppError(500,`Store registration failed, please try again`))
+      return  res.status(500).json({
+          success: false ,
+          message: `Store registration failed, please try again`
+      }) 
     }
 
        // save user in DB
        await newStore.save();
-       res.status(200).json({
+
+      return res.status(200).json({
         success: true ,
         message: `Store registered successfully`, 
         newStore
     })
+  } catch (error) {
+   return res.status(500).json({
+      success: false ,
+      message: error.message
+  }) 
+  }
 }
 
 
