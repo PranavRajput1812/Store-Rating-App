@@ -67,57 +67,47 @@ const rateStore = async (req,res)=>{
 
     }
 }
-const addStore = async(req,res)=>{
+
+const addStore = async (req, res) => {
   try {
-    
-  
-    const{Name,email,Address,rating} = req.body;
+    const { Name, email, Address, rating } = req.body;
+    console.log(req.body);
+    if (!Name || !email || !Address) {
+      return res.status(400).json({
+        success: false,
+        message: 'All fields are required',
+      });
+    }
 
-    if(!Name || !email ||!Address){
-       // return next(new AppError(500,`All fields are required`))
-      return res.status(500).json({
-        success: false ,
-        message: 'All fields are required'
-    })  
+    const storeExists = await store.findOne({ email });
+    //console.log('Store Exists:', storeExists);
+    if (storeExists) {
+      return res.json({
+        success: false,
+        message: 'Store already exists!',
+      });
     }
-    const storeExists = await store.findOne({email})
-    if(storeExists){
-       // return next(new AppError(500,`User already exists !`))
-      return res.status(500).json({
-        success: false ,
-        message: "User already exists !"
-    }) 
-    }
+
     const newStore = await store.create({
-        Name,
-        email,
-        Address,
-        rating
-    })
-   // console.log(newStore);
-    if(!newStore){
-       // return next(new AppError(500,`Store registration failed, please try again`))
-      return  res.status(500).json({
-          success: false ,
-          message: `Store registration failed, please try again`
-      }) 
-    }
+      Name,
+      email,
+      Address,
+      rating,
+    });
+   // console.log('New Store:', newStore);
 
-       // save user in DB
-       await newStore.save();
-
-      return res.status(200).json({
-        success: true ,
-        message: `Store registered successfully`, 
-        newStore
-    })
+    return res.status(200).json({
+      success: true,
+      message: 'Store registered successfully',
+      newStore,
+    });
   } catch (error) {
-   return res.status(500).json({
-      success: false ,
-      message: error.message
-  }) 
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
-}
+};
 
 
 const getUserThatRateStore = async(req,res)=>{
