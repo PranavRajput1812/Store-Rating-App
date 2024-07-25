@@ -1,3 +1,4 @@
+import store from "../models/storeModel.js"
 import user from "../models/userModel.js"
 import { configDotenv } from "dotenv"
 
@@ -12,8 +13,8 @@ const cookieOptions = {
 const register = async(req,res,next) =>{
     
     const {Name,email,password,Address,role} = req.body
-
-    if(!Name || !email || !password ||!Address){
+      console.log('req',req.body);
+    if(!Name || !email || !password || !Address){
         return res.status(500).json({
             success: false ,
             message: 'All Fields are Required!'
@@ -24,7 +25,7 @@ const register = async(req,res,next) =>{
     const userExists = await user.findOne({email})
 
     if(userExists){
-        return res.status(500).json({
+        return res.json({
             success: false ,
             message: 'User already exists!'
         });
@@ -184,5 +185,39 @@ const changePassword = async (req,res,next) =>{
 }
 
 
-
-export {register,login,logout,changePassword,getUserById}
+const getAllUser = async(req,res,next)=>{
+    try {
+        
+    
+    let allUsers = await user.find();
+   // console.log(allUsers);
+    let alluserRoleStoreOwner = allUsers.filter(ele=>ele.role=='STOREOWNER');
+    // console.log(alluserRoleStoreOwner);
+    let emailId = alluserRoleStoreOwner.map(ele=>ele.email);
+    console.log(emailId);
+    let storeRating = await store.findOne({email:emailId})
+    let rating = storeRating.overallRating;
+    allUsers.rating = rating
+    console.log('dt',storeRating);
+    if(!allUsers){
+        return res.json({
+            success:false,
+            message:'No Data Found!'
+        })
+    }
+    return res.json({
+        success:true,
+        message:"Users Found!",
+        allUsers,
+       
+    })
+} catch (error) {
+    return res.status(500).json({
+        success:false,
+        message : error.message
+    })
+        
+}
+    
+}
+export {register,login,logout,changePassword,getUserById,getAllUser}

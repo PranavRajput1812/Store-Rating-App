@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
     },
     role:{
         type:String,
-        enum: ['USER','ADMIN','StoreOwner'],
+        enum: ['USER','ADMIN','STOREOWNER'],
         default: 'USER'
     },
     isSumbmitedRating :{
