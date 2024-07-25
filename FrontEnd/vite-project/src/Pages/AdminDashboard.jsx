@@ -61,10 +61,13 @@ const AdminDashboard = () => {
     });
   };
 
+  const [isUserFormVisible, setIsUserFormVisible] = useState(false);
+  const [isStoreFormVisible, setIsStoreFormVisible] = useState(false);
+
   async function handleFormSubmit(e) {
     e.preventDefault();
     try {
-      if (!userDetails.Name || !userDetails.email || !userDetails.password || !userDetails.Address) {
+      if (!userDetails.Name || !userDetails.email || !userDetails.password || !userDetails.Address ||!userDetails.role) {
         toast.error('All fields are required');
         return;
       }
@@ -73,7 +76,8 @@ const AdminDashboard = () => {
         Name: userDetails.Name,
         email: userDetails.email,
         password: userDetails.password,
-        Address: userDetails.Address
+        Address: userDetails.Address,
+        role : userDetails.role.toUpperCase()
       };
 
       const response = await axiosInstance.post('/user/register', userRegister);
@@ -84,7 +88,8 @@ const AdminDashboard = () => {
           Name: "",
           email: "",
           password: "",
-          Address: ""
+          Address: "",
+          role:""
         });
         navigate('/admin-dashboard');
       }
@@ -165,145 +170,159 @@ const AdminDashboard = () => {
         
         <div className="bg-white shadow-md rounded-lg p-6 mb-8">
           <h3 className="text-xl font-semibold text-gray-700 mb-4">User Management</h3>
-            <div className='flex items-center justify-center min-h-screen bg-gray-100'>
-      <form noValidate onSubmit={handleFormSubmit} className='bg-white shadow-lg rounded-lg p-8 w-full max-w-md'>
-        <h1 className='text-center text-2xl font-bold mb-6'>Create Account</h1>
-
-        
-
-        <div className='mb-6'>
-          <input
-            type='text'
-            required
-            name='Name'
-            id='Name'
-            placeholder='Enter your full-name...'
-            className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
-            onChange={handleUserInput}
-            value={userDetails.Name}
-          />
+          <button 
+            onClick={() => setIsUserFormVisible(!isUserFormVisible)} 
+            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200 mb-4"
+          >
+            {isUserFormVisible ? "Close" : "Create User "}
+          </button>
+          {isUserFormVisible && (
+            <form noValidate onSubmit={handleFormSubmit}   className='bg-white shadow-lg rounded-lg p-8 w-full max-w-md mx-auto'>
+              <h1 className='text-center text-2xl font-bold mb-6'>Create Account</h1>
+              <div className='mb-6'>
+                <input
+                  type='text'
+                  required
+                  name='Name'
+                  id='Name'
+                  placeholder='Enter your full-name...'
+                  className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
+                  onChange={handleUserInput}
+                  value={userDetails.Name}
+                />
+              </div>
+              <div className='mb-4'>
+                <input
+                  type='email'
+                  required
+                  name='email'
+                  id='email'
+                  placeholder='Enter your Email...'
+                  className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
+                  onChange={handleUserInput}
+                  value={userDetails.email}
+                />
+              </div>
+              <div className='mb-6'>
+                <input
+                  type='password'
+                  required
+                  name='password'
+                  id='password'
+                  placeholder='Enter your password...'
+                  className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
+                  onChange={handleUserInput}
+                  value={userDetails.password}
+                />
+              </div>
+              <div className='mb-6'>
+                <input
+                  type='text'
+                  required
+                  name='Address'
+                  id='Address'
+                  placeholder='Enter your Address...'
+                  className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
+                  onChange={handleUserInput}
+                  value={userDetails.Address}
+                />
+              </div>
+              <div className='mb-6'>
+                <input
+                  type='text'
+                  required
+                  name='role'
+                  id='role'
+                  placeholder='Enter your User Role...'
+                  className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
+                  onChange={handleUserInput}
+                  value={userDetails.role}
+                />
+              </div>
+              <button
+                className='w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all'
+                type='submit'
+              >
+                Create Account
+              </button>
+            </form>
+          )}
         </div>
 
-        <div className='mb-4'>
-          <input
-            type='email'
-            required
-            name='email'
-            id='email'
-            placeholder='Enter your Email...'
-            className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
-            onChange={handleUserInput}
-            value={userDetails.email}
-          />
-        </div>
-
-        <div className='mb-6'>
-          <input
-            type='password'
-            required
-            name='password'
-            id='password'
-            placeholder='Enter your password...'
-            className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
-            onChange={handleUserInput}
-            value={userDetails.password}
-          />
-        </div>
-
-        <div className='mb-6'>
-          <input
-            type='text'
-            required
-            name='Address'
-            id='Address'
-            placeholder='Enter your Address...'
-            className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
-            onChange={handleUserInput}
-            value={userDetails.Address}
-          />
-        </div>
-
-        <button
-          className='w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all'
-          type='submit'
-        >
-          Create Account
-        </button>
-
-        
-      </form>
-    </div>
-        </div>
         <div className="bg-white shadow-md rounded-lg p-6">
           <h3 className="text-xl font-semibold text-gray-700 mb-4">Store Management</h3>
-          {/* Render store management table and forms here */}
-          <form onSubmit={handleStoreFormSubmit} className='bg-white shadow-lg rounded-lg p-8 w-full max-w-md'>
-            <h1 className='text-center text-2xl font-bold mb-6'>Create Store</h1>
-
-            <div className='mb-6'>
-              <input
-                type='text'
-                required
-                name='Name'
-                id='StoreName'
-                placeholder='Enter store name...'
-                className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
-                onChange={handleStoreInput}
-                value={storeDetails.Name}
-              />
-            </div>
-
-            <div className='mb-4'>
-              <input
-                type='email'
-                required
-                name='email'
-                id='StoreEmail'
-                placeholder='Enter store email...'
-                className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
-                onChange={handleStoreInput}
-                value={storeDetails.email}
-              />
-            </div>
-
-            <div className='mb-6'>
-              <input
-                type='text'
-                required
-                name='Address'
-                id='StoreAddress'
-                placeholder='Enter store address...'
-                className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
-                onChange={handleStoreInput}
-                value={storeDetails.Address}
-              />
-            </div>
-
-            <div className='mb-6'>
-              <input
-                type='number'
-                required
-                name='rating'
-                id='rating'
-                placeholder='Enter store rating...'
-                className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
-                onChange={handleStoreInput}
-                value={storeDetails.rating}
-              />
-            </div>
-
-            <button
-              className='w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all'
-              type='submit'
-            >
-              Create Store
-            </button>
-          </form>
+          <button 
+            onClick={() => setIsStoreFormVisible(!isStoreFormVisible)} 
+            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200 mb-4"
+          >
+            {isStoreFormVisible ? "Close" : "Create Store"}
+          </button>
+          {isStoreFormVisible && (
+            <form onSubmit={handleStoreFormSubmit} className='bg-white shadow-lg rounded-lg p-8 w-full max-w-md mx-auto'>
+              <h1 className='text-center text-2xl font-bold mb-6'>Create Store</h1>
+              <div className='mb-6'>
+                <input
+                  type='text'
+                  required
+                  name='Name'
+                  id='StoreName'
+                  placeholder='Enter store name...'
+                  className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
+                  onChange={handleStoreInput}
+                  value={storeDetails.Name}
+                />
+              </div>
+              <div className='mb-4'>
+                <input
+                  type='email'
+                  required
+                  name='email'
+                  id='StoreEmail'
+                  placeholder='Enter store email...'
+                  className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
+                  onChange={handleStoreInput}
+                  value={storeDetails.email}
+                />
+              </div>
+              <div className='mb-6'>
+                <input
+                  type='text'
+                  required
+                  name='Address'
+                  id='StoreAddress'
+                  placeholder='Enter store address...'
+                  className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
+                  onChange={handleStoreInput}
+                  value={storeDetails.Address}
+                />
+              </div>
+              <div className='mb-6'>
+                <input
+                  type='number'
+                  required
+                  name='rating'
+                  id='rating'
+                  placeholder='Enter store rating...'
+                  className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
+                  onChange={handleStoreInput}
+                  value={storeDetails.rating}
+                />
+              </div>
+              <button
+                className='w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all'
+                type='submit'
+              >
+                Create Store
+              </button>
+            </form>
+          )}
         </div>
       </div>
     </div>
   );
 };
+
+
 
 
 
