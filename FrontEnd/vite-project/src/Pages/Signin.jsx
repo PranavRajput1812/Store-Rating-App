@@ -1,14 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-// import BaseLayout from '../Layouts/BaseLayout'
 import toast from 'react-hot-toast'
-import { useDispatch } from 'react-redux';
-import {  login } from '../Redux/Slices/authSlice';
+import axiosInstance from '../Helpers/axiosInstance';
 
 function Signin() {
 
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+
 
   const [signinData,setSigninData] = useState({
     email: "" ,
@@ -30,13 +28,13 @@ function Signin() {
       toast.error('Please fill all the details !')
       return
     }
-
-    const response = await dispatch(login(signinData))
-   
-    if (response?.payload?.data?.success) {
-      const userRole = response.payload.data.existingUser.role;
-      let existingId =  response.payload.data.existingUser.email;
-      console.log(existingId);// Assuming role is stored under user object
+console.log(signinData);
+    const response = await axiosInstance.post('/user/login',signinData);
+   console.log(response);
+    if (response.data.success) {
+      const userRole = response.data.existingUser.role;
+      let existingId =  response.data.existingUser.email;
+      console.log(existingId);
      // console.log(userRole);
       if (userRole == 'ADMIN') {
         navigate('/admin-dashboard');
@@ -47,9 +45,7 @@ function Signin() {
       if (userRole == 'STOREOWNER') {
         navigate('/storeOwner-dashboard',{ state: { userRole, existingId } });
       }
-    } else {
-      toast.error('Login failed. Please try again.');
-    }
+    } 
 
     
 
@@ -61,7 +57,7 @@ function Signin() {
   }
 
   return (
-    // <BaseLayout>
+  
         <div className='flex items-center justify-center min-h-screen bg-gray-100'>
       <form noValidate onSubmit={handleLogin} className='bg-white shadow-lg rounded-lg p-8 w-full max-w-md'>
         <h1 className='text-center text-2xl font-bold mb-6'>Login</h1>
