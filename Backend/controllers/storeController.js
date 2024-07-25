@@ -136,8 +136,8 @@ const getUserThatRateStore = async(req,res)=>{
       storeUser
     });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).json({
+    console.log(err.message);
+    res.json({
       success: false,
       message: err.message
     });
