@@ -45,51 +45,6 @@ function StoreOwnerDashboard() {
         navigate('/');
       };
 
-    // return (
-    //     <div className='p-4'>
-    //         <h1 className='text-xl font-bold mb-4'>Store Owner Dashboard</h1>
-
-    //         {storeData && (
-    //             <div className='mb-4'>
-    //                 <h2 className='text-lg font-semibold'>Store Information</h2>
-    //                 <p><strong>Name : </strong> {storeData.Name}</p>
-    //                 <p><strong>Address: </strong> {storeData.Address}</p>
-    //                 <p><strong>Email: </strong>{storeData.email}</p>
-    //                 <p><strong>Overall Rating : </strong> {storeData.overallRating}</p>
-    //             </div>
-    //         )}
-
-    //         <div className='mb-4'>
-    //             <h2 className='text-lg font-semibold'>User Ratings</h2>
-    //             <table className='w-full border-collapse'>
-    //                 <thead>
-    //                     <tr>
-    //                         <th className='border p-2'>Name</th>
-    //                         <th className='border p-2'>Email</th>
-    //                         <th className='border p-2'>Address</th>
-    //                     </tr>
-    //                 </thead>
-    //                 <tbody>
-    //                     {userRatings.map((user) => (
-    //                         <tr key={user._id}>
-    //                             <td className='border p-2'>{user.Name}</td>
-    //                             <td className='border p-2'>{user.email}</td>
-    //                             <td className='border p-2'>{user.Address}</td>
-                                
-    //                         </tr>
-    //                     ))}
-    //                 </tbody>
-    //             </table>
-    //         </div>
-
-    //         <button
-    //             onClick={handleLogout}
-    //             className='mt-4 bg-red-500 text-white px-4 py-2 rounded'
-    //         >
-    //             Logout
-    //         </button>
-    //     </div>
-    // );
 
 
     return (
