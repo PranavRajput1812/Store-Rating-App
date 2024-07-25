@@ -1,46 +1,56 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-// import { fetchUsers, fetchStores } from '../Redux/Slices/adminSlice';
+import { useDispatch } from 'react-redux';
 import { logout } from '../Redux/Slices/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { getDashboardData,createStore } from '../Redux/Slices/adminSlice';
 import toast from 'react-hot-toast';
+import axiosInstance from '../Helpers/axiosInstance';
 
 const AdminDashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [userDetails,setUserDetails] = useState({
+  const [userDetails, setUserDetails] = useState({
     Name: "",
-    email:"",
-    password :"",
-    Address : ""
-  })
+    email: "",
+    password: "",
+    Address: "",
+    role: ""
+  });
 
   const [storeDetails, setStoreDetails] = useState({
     Name: "",
     email: "",
     Address: "",
-    Rating: ""
+    rating: ""
   });
 
-  let dashBoardData = useSelector(state => state.admin.dashBoardData);
-  console.log(dashBoardData);
-  let userCount ;
-  let storeCount;
-  let userSubmitedRating;
-  dashBoardData.forEach(element => {
-        userCount = element.users;
-        storeCount = element.stores;
-        userSubmitedRating = element.userSubmitedRating;
+  const [dashBoardData, setDashBoardData] = useState({
+    stores: "",
+    users: "",
+    userSubmitedRating: ""
   });
-  
+
+  // Load dashboard data
+  useEffect(() => {
+    async function fetchDashBoardData() {
+      try {
+        const response = await axiosInstance.get('/admin/admin-dashboard');
+        console.log('Dashboard data:', response.data);
+        setDashBoardData(response.data);
+      } catch (error) {
+        console.error('Error loading dashboard data:', error);
+      }
+    }
+
+    fetchDashBoardData();
+  }, []);
+
   function handleUserInput(e) {
-    const{name,value} = e.target
+    const { name, value } = e.target;
     setUserDetails({
-        ...userDetails,
-        [name]:value
-    })
+      ...userDetails,
+      [name]: value
+    });
   }
 
   const handleStoreInput = (e) => {
@@ -51,77 +61,83 @@ const AdminDashboard = () => {
     });
   };
 
-  async function handleFormSubmit (e) {
-    e.preventDefault()
+  async function handleFormSubmit(e) {
+    e.preventDefault();
+    try {
+      if (!userDetails.Name || !userDetails.email || !userDetails.password || !userDetails.Address) {
+        toast.error('All fields are required');
+        return;
+      }
 
-    if(!userDetails.Name || !userDetails.email || !userDetails.password || !userDetails.Address ){
-      toast.error('All fields are required')
-      return
+      const userRegister = {
+        Name: userDetails.Name,
+        email: userDetails.email,
+        password: userDetails.password,
+        Address: userDetails.Address
+      };
+
+      const response = await axiosInstance.post('/user/register', userRegister);
+
+      if (response.data.success) {
+        toast.success('User Created Successfully!');
+        setUserDetails({
+          Name: "",
+          email: "",
+          password: "",
+          Address: ""
+        });
+        navigate('/admin-dashboard');
+      }
+    } catch (error) {
+      toast.error(error.message);
+      console.error(error);
     }
-
-    // form-data is necessary whenever we need to send image at backend else data can be passed normally !
-    const formData = new FormData()
-
-    formData.append('Name', userDetails.Name)
-    formData.append('email', userDetails.email)
-    formData.append('password', userDetails.password)
-    formData.append('Address', userDetails.Address)
-
-    const response = await dispatch(getDashboardData(formData))
-    // console.log(response);
-
-    if(response?.payload?.success){
-      setUserDetails({
-        Name: "" ,
-        email: "" ,
-        password : "" ,
-        Address: "" ,
-    })
-      navigate('/admin-dashboard')
-    }
-
   }
 
   async function handleStoreFormSubmit(e) {
     e.preventDefault();
 
-    if (!storeDetails.Name || !storeDetails.email || !storeDetails.Address || !storeDetails.Rating) {
+    if (!storeDetails.Name || !storeDetails.email || !storeDetails.Address || !storeDetails.rating) {
       toast.error('All fields are required');
       return;
     }
 
-    const formData = new FormData();
-    formData.append('Name', storeDetails.Name);
-    formData.append('email', storeDetails.email);
-    formData.append('Address', storeDetails.Address);
-    formData.append('Rating', storeDetails.Rating);
+    const storeData = {
+      Name: storeDetails.Name,
+      email: storeDetails.email,
+      Address: storeDetails.Address,
+      rating: parseFloat(storeDetails.rating)
+    };
 
-    const response = await dispatch(createStore(formData));
+    try {
+      const response = await axiosInstance.post('/store/add-Store', storeData);
+      console.log(response);
 
-    if (response?.payload?.success) {
-      setStoreDetails({
-        Name: "",
-        email: "",
-        Address: "",
-        Rating: "",
-      });
-      navigate('/admin-dashboard');
+      if (response.data.success) {
+        toast.success('Store Created Successfully!');
+        setStoreDetails({
+          Name: '',
+          email: '',
+          Address: '',
+          rating: ''
+        });
+        navigate('/admin-dashboard');
+      } 
+      if(response.data.message) {
+       
+          toast.error(response.data.message);
+        
+      }
+    } catch (error) {
+      toast.error(error.message);
+      console.error(error);
     }
   }
-
-
-  async function loadDashBoardData () {
-    await dispatch(getDashboardData())
-}
-  useEffect(() => {
-    loadDashBoardData();
-  }, []);
 
   const handleLogout = () => {
     dispatch(logout());
     navigate('/');
   };
-
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="container mx-auto">
@@ -130,15 +146,15 @@ const AdminDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white shadow-md rounded-lg p-6 text-center">
             <h2 className="text-2xl font-semibold text-gray-700">Total Users</h2>
-            <p className="text-3xl text-indigo-500">{userCount}</p>
+            <p className="text-3xl text-indigo-500">{dashBoardData.users}</p>
           </div>
           <div className="bg-white shadow-md rounded-lg p-6 text-center">
             <h2 className="text-2xl font-semibold text-gray-700">Total Stores</h2>
-            <p className="text-3xl text-indigo-500">{storeCount}</p>
+            <p className="text-3xl text-indigo-500">{dashBoardData.stores}</p>
           </div>
           <div className="bg-white shadow-md rounded-lg p-6 text-center">
             <h2 className="text-2xl font-semibold text-gray-700">User Submitted Ratings</h2>
-            <p className="text-3xl text-indigo-500">{userSubmitedRating}</p>
+            <p className="text-3xl text-indigo-500">{dashBoardData.userSubmitedRating}</p>
           </div>
         </div>
 
@@ -149,58 +165,6 @@ const AdminDashboard = () => {
         
         <div className="bg-white shadow-md rounded-lg p-6 mb-8">
           <h3 className="text-xl font-semibold text-gray-700 mb-4">User Management</h3>
-          {/* Render user management table and forms here */}
-          {/* <main className='grid grid-cols-2 gap-x-10'>
-              <div className='gap-y-6'>
-                
-                  <div className="flex flex-col gap-2 mt-4">
-                    <label htmlFor="clubName" className='text-lg font-semibold'>Name </label>
-                    <input 
-                      type="text" 
-                      required
-                      name=''
-                      id='clubName'
-                      placeholder='Enter Club Name'
-                      className='bg-transparent px-2 py-1 border'
-                      value={userDetails.clubName}
-                      onChange={handleUserInput}
-                    />
-                  </div>
-              </div>
-
-              <div className='flex flex-col gap-1'>
-                  
-                  <div className="flex flex-col gap-2">
-                    <label htmlFor="tagline" className='text-lg font-semibold'>Tagline </label>
-                    <input 
-                      type="text" 
-                      required
-                      name='tagline'
-                      id='tagline'
-                      placeholder='Enter tagline'
-                      className='bg-transparent px-2 py-1 border'
-                      value={userDetails.tagline}
-                      onChange={handleUserInput}
-                    />
-                  </div> 
-                  <div className="flex flex-col gap-2 mt-2">
-                    <label htmlFor="description" className='text-lg font-semibold'>Description</label>
-                    <textarea 
-                      type="" 
-                      required
-                      name='description'
-                      id='description'
-                      placeholder='Enter description'
-                      className='bg-transparent px-2 py-1 border resize-none '
-                      value={userDetails.description}
-                      onChange={handleUserInput}
-                      rows='6'
-                    />
-                  </div> 
-
-
-              </div>
-          </main> */}
             <div className='flex items-center justify-center min-h-screen bg-gray-100'>
       <form noValidate onSubmit={handleFormSubmit} className='bg-white shadow-lg rounded-lg p-8 w-full max-w-md'>
         <h1 className='text-center text-2xl font-bold mb-6'>Create Account</h1>
@@ -317,14 +281,14 @@ const AdminDashboard = () => {
 
             <div className='mb-6'>
               <input
-                type='text'
+                type='number'
                 required
-                name='Rating'
-                id='StoreRating'
+                name='rating'
+                id='rating'
                 placeholder='Enter store rating...'
                 className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
                 onChange={handleStoreInput}
-                value={storeDetails.Rating}
+                value={storeDetails.rating}
               />
             </div>
 

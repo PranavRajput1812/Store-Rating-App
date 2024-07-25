@@ -37,8 +37,10 @@ function Signin() {
     //   navigate('/')
     // }
     if (response?.payload?.data?.success) {
-      const userRole = response.payload.data.existingUser.role; // Assuming role is stored under user object
-      console.log(userRole);
+      const userRole = response.payload.data.existingUser.role;
+      let existingId =  response.payload.data.existingUser.email;
+      console.log(existingId);// Assuming role is stored under user object
+     // console.log(userRole);
       if (userRole == 'ADMIN') {
         navigate('/admin-dashboard');
       } 
@@ -46,7 +48,7 @@ function Signin() {
         navigate('/user-dashboard')
       }
       if (userRole == 'StoreOwner') {
-        navigate('/StoreOwner-dashboard');
+        navigate('/storeOwner-dashboard',{ state: { userRole, existingId } });
       }
     } else {
       toast.error('Login failed. Please try again.');
