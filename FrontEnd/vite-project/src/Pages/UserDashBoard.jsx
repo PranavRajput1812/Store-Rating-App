@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../Helpers/axiosInstance";
 import toast from "react-hot-toast";
-// import { useLocation } from 'react-router-dom';
-import { logout } from "../Redux/Slices/authSlice";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 function UserDashboard() {
   const [storeData, setStoreData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [ratings, setRatings] = useState({});
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const fetchStoreData = async () => {
@@ -33,9 +29,13 @@ function UserDashboard() {
       [storeId]: rating,
     });
   };
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/");
+  const handleLogout = async() => {
+   
+    let response = await axiosInstance.get('/user/logOut');
+    if(response.data.success){
+      toast.success(response.data.message)
+      navigate("/");
+    }
   };
   const handleSubmitRating = async (storeId) => {
     try {

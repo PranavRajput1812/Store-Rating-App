@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
 import axiosInstance from '../Helpers/axiosInstance';
 import toast from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
 import { useLocation ,useNavigate } from 'react-router-dom';
-import { logout } from '../Redux/Slices/authSlice';
+
 
 
 function StoreOwnerDashboard() {
     const [storeData, setStoreData] = useState([]);
     const [userRatings, setUserRatings] = useState([]);
     const location = useLocation();
-    const dispatch = useDispatch();
+    
     const navigate = useNavigate();
     const { existingId } = location.state || {}
     
@@ -39,9 +38,13 @@ function StoreOwnerDashboard() {
         fetchStoreAndRatingsData();
     }, []);
 
-    const handleLogout = () => {
-        dispatch(logout());
-        navigate('/');
+    const handleLogout = async() => {
+   
+        let response = await axiosInstance.get('/user/logOut');
+        if(response.data.success){
+          toast.success(response.data.message)
+          navigate("/");
+        }
       };
       const handleChangePassword = () => {
         navigate("/change-password");

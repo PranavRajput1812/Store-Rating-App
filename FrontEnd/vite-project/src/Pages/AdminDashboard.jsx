@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { logout } from "../Redux/Slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axiosInstance from "../Helpers/axiosInstance";
 
 const AdminDashboard = () => {
-  const dispatch = useDispatch();
+  
   const navigate = useNavigate();
 
   const [userDetails, setUserDetails] = useState({
@@ -155,9 +153,13 @@ const AdminDashboard = () => {
     navigate("/storesList");
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/");
+  const handleLogout = async() => {
+   
+    let response = await axiosInstance.get('/user/logOut');
+    if(response.data.success){
+      toast.success(response.data.message)
+      navigate("/");
+    }
   };
   const handleChangePassword = () => {
     navigate("/change-password");

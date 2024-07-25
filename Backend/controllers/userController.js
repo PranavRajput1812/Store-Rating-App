@@ -86,7 +86,7 @@ const login = async (req,res,next) =>{
 
         if(!existingUser || !(await existingUser.comparePassword(password))){
            
-            return res.status(500).json({
+            return res.json({
                 success: false ,
                 message: 'Email & Password doesnt match'
             });

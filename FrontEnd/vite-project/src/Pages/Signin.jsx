@@ -23,6 +23,8 @@ function Signin() {
 
   async function handleLogin (e) {
     e.preventDefault() 
+try {
+  
 
     if( !signinData.email || !signinData.password){
       toast.error('Please fill all the details !')
@@ -46,13 +48,18 @@ console.log(signinData);
         navigate('/storeOwner-dashboard',{ state: { userRole, existingId } });
       }
     } 
-
+else{
+  toast.error(response.data.message)
+}
     
 
     setSigninData({
       email: "" ,
       password: "" 
     })
+  } catch (error) {
+    toast.error(error.message)
+  }
 
   }
 
