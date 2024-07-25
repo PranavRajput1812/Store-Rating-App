@@ -13,13 +13,6 @@ const dashBoardData = async (req, res) => {
 
         let userSubmitedRating = await user.find({isSumbmitedRating:true}).countDocuments()||0;
 
-
-        // if (!userCount) {
-        //     return res.status(500).json({
-        //         success: false,
-        //         message: 'Error!'
-        //     });
-        // }
         res.status(200).json({
             success: true,
             message: 'User count retrieved successfully!',
