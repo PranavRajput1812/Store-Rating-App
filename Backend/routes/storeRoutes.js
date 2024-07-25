@@ -9,6 +9,6 @@ const router = Router();
 router.post('/add-Store',isLoggedIn,authorizedRoles('ADMIN'),addStore);
 router.get('/store-listing',isLoggedIn,authorizedRoles('USER','ADMIN'),storeListing);
 router.post('/rate/:storeId',isLoggedIn,authorizedRoles('USER'),rateStore);
-router.get('/:storeId/user',isLoggedIn,authorizedRoles('StoreOwner'),getUserThatRateStore);
+router.get('/:email/user',isLoggedIn,authorizedRoles('StoreOwner'),getUserThatRateStore);
 
 export default router;
