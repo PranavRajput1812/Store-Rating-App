@@ -23,11 +23,11 @@ const UserList = () => {
       const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
     };
-      const filteredStores = users.filter((store) =>
-        store.Name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        store.Address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        store.email.toLowerCase().includes(searchTerm.toLowerCase())||
-        store.role.toLowerCase().includes(searchTerm.toLowerCase())
+      const filteredStores = users.filter((user) =>
+        user.Name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.Address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())||
+        user.role.toLowerCase().includes(searchTerm.toLowerCase())
     );
   
   
