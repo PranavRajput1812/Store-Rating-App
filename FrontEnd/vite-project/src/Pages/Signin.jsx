@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 // import BaseLayout from '../Layouts/BaseLayout'
 import toast from 'react-hot-toast'
@@ -39,10 +39,14 @@ function Signin() {
     if (response?.payload?.data?.success) {
       const userRole = response.payload.data.existingUser.role; // Assuming role is stored under user object
       console.log(userRole);
-      if (userRole === 'ADMIN') {
+      if (userRole == 'ADMIN') {
         navigate('/admin-dashboard');
-      } else {
-        navigate('/');
+      } 
+      if(userRole =='USER'){
+        navigate('/user-dashboard')
+      }
+      if (userRole == 'StoreOwner') {
+        navigate('/StoreOwner-dashboard');
       }
     } else {
       toast.error('Login failed. Please try again.');
