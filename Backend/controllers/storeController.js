@@ -2,11 +2,20 @@ import user from "../models/userModel.js";
 import store from "../models/storeModel.js";
 const storeListing = async(req,res)=>{
     try {
+      const userId = req.user.id
         const stores = await store.find();
+        const storesWithUserRatings = stores.map(store => {
+          const userRating = store.ratings.find(rating => rating.userId.toString() === userId);
+          return {
+              ...store._doc, // Spread store data
+              myRating: userRating ? userRating.rating : null // Add user's rating
+          };
+      });
+      console.log(storesWithUserRatings);
          res.status(200).json({
             success: true,
             message: `Store load successfully`,
-            stores
+            stores: storesWithUserRatings 
         })
       } catch (err) {
         console.error(err.message);
@@ -33,7 +42,7 @@ const rateStore = async (req,res)=>{
       } else {
         storeRate.ratings.push({ userId, rating });
       }
-    //  console.log('userRating',userRating);
+      console.log('userRating',userRating);
       storeRate.overallRating = storeRate.ratings.reduce((acc, r) => acc + r.rating, 0) / storeRate.ratings.length;
       await storeRate.save();
       

@@ -6,6 +6,7 @@ import './index.css';
 import Signup from './Pages/Signup'
 import Signin from './Pages/Signin'
 import AdminDashboard from './Pages/AdminDashboard.jsx';
+import UserDashboard from './Pages/UserDashBoard.jsx';
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
       <Route path='/signup' element={ <Signup/> } />
       <Route path='/login' element={ <Signin/> } />
       <Route path='/admin-dashboard' element={<AdminDashboard/>}/>
+      <Route path='/user-dashboard' element={<UserDashboard/>}/>
     </Routes>
   )
 }
