@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'; // Make sure to install and use React Router for navigation
+import { Link } from 'react-router-dom'; 
 import homeImage from '../assets/HomePageImage.jpg';
 
 const Navbar = () => {

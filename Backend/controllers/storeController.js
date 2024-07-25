@@ -7,8 +7,8 @@ const storeListing = async(req,res)=>{
         const storesWithUserRatings = stores.map(store => {
           const userRating = store.ratings.find(rating => rating.userId.toString() === userId);
           return {
-              ...store._doc, // Spread store data
-              myRating: userRating ? userRating.rating : null // Add user's rating
+              ...store._doc, 
+              myRating: userRating ? userRating.rating : null 
           };
       });
       console.log(storesWithUserRatings);
@@ -115,17 +115,17 @@ const getUserThatRateStore = async(req,res)=>{
   try {
     let email = req.params.email;
     console.log(email);
-    // Find the store by ID
+  
     let storeUser = await store.findOne({email});
     console.log(storeUser);
     if (!storeUser) {
       return res.status(404).json({ msg: 'Store not found' });
     }
     let averageRating = storeUser.overallRating;
-    // Extract user IDs from the ratings
+  
     let userIds = storeUser.ratings.map(r => r.userId);
 
-    // Find all users that have rated the store
+   
     let users = await user.find({ '_id': { $in: userIds } });
 
     res.status(200).json({
