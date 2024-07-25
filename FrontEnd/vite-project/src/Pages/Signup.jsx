@@ -1,97 +1,96 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast'
-import { useDispatch } from 'react-redux';
-import { createAccount } from '../Redux/Slices/authSlice';
+import toast from 'react-hot-toast';
+import axiosInstance from '../Helpers/axiosInstance';
 
 function Signup() {
+  const [signupData, setSignupData] = useState({
+    Name: "",
+    email: "",
+    password: "",
+    Address: "",
+    role: ""
+  });
 
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-
-  const [signupData,setSignupData] = useState({
-    Name: "" ,
-    email: "" ,
-    password: "" ,
-    Address: "" 
-  })
-
-  function handleUserInput (e) {
-    const {name, value} = e.target
+  function handleUserInput(e) {
+    const { name, value } = e.target;
     setSignupData({
-        ...signupData,
-        [name] : value
-    })
+      ...signupData,
+      [name]: value
+    });
   }
 
-  
+  async function handleFormSubmit(e) {
+    e.preventDefault();
 
-  async function createNewAccount (e) {
-    e.preventDefault() 
-
-    if(!signupData.Name || !signupData.email || !signupData.password ||!signupData.Address){
-      toast.error('Please fill all the details !')
-      return
+    if (!signupData.Name || !signupData.email || !signupData.password || !signupData.Address) {
+      toast.error('Please fill all the details!');
+      return;
     }
 
-    if(!signupData.email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)){
-      toast.error('Enter a valid email !')
-      return
+    if (!signupData.email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
+      toast.error('Enter a valid email!');
+      return;
     }
 
-    if(signupData.Name.length < 20){
-      toast.error('Name should be atleast of 20 characters !')
-      return
+    if (signupData.Name.length < 20) {
+      toast.error('Name should be at least 20 characters!');
+      return;
     }
 
-    if(!signupData.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#/$%/^&/*]).{8,}$/)){
-      toast.error('Enter a strong password !')
-      return
-    }
-    if(signupData.password.length>16 && signupData.password.length<8){
-      toast.error('Password Should be less than 16 characters and greater than 8');
-      return
-    }
-    const formData = new FormData()
-
-    formData.append('Name',signupData.Name)
-    formData.append('email',signupData.email)
-    formData.append('password',signupData.password)
-    formData.append('Address',signupData.Address)
-
-    const response = await dispatch(createAccount(formData))
-     console.log(response);
-    if(response?.payload?.data?.success){
-      navigate('/')
+    if (!signupData.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#/$%/^&/*]).{8,}$/)) {
+      toast.error('Enter a strong password!');
+      return;
     }
 
-    setSignupData({
-      Name: "" ,
-      email: "" ,
-      password: "" ,
-      Address: "" 
-    })
+    if (signupData.password.length < 8 || signupData.password.length > 16) {
+      toast.error('Password should be between 8 and 16 characters!');
+      return;
+    }
 
-  
+    try {
+      const userRegister = {
+        Name: signupData.Name,
+        email: signupData.email,
+        password: signupData.password,
+        Address: signupData.Address,
+      };
 
+      const response = await axiosInstance.post('/user/register', userRegister);
+
+      if (response.data.success) {
+        toast.success('User Created Successfully!');
+        setSignupData({
+          Name: "",
+          email: "",
+          password: "",
+          Address: "",
+          
+        });
+        navigate('/');
+      }else{
+        toast.error('User Already Exist')
+      }
+      
+    } catch (error) {
+      toast.error(error.message);
+      console.error(error);
+    }
   }
 
   return (
-    
-      <div className='flex items-center justify-center min-h-screen bg-gray-100'>
-      <form noValidate onSubmit={createNewAccount} className='bg-white shadow-lg rounded-lg p-8 w-full max-w-md'>
+    <div className='flex items-center justify-center min-h-screen bg-gray-100'>
+      <form noValidate onSubmit={handleFormSubmit} className='bg-white shadow-lg rounded-lg p-8 w-full max-w-md'>
         <h1 className='text-center text-2xl font-bold mb-6'>Register</h1>
-
-        
-
         <div className='mb-6'>
           <input
             type='text'
             required
             name='Name'
             id='Name'
-            placeholder='Enter your full-name...'
+            placeholder='Enter your full name...'
             className='w-full bg-gray-100 px-4 py-2 rounded-md border focus:outline-none focus:border-blue-500'
             onChange={handleUserInput}
             value={signupData.Name}
@@ -152,8 +151,8 @@ function Signup() {
         </p>
       </form>
     </div>
-   
   );
 }
 
 export default Signup;
+
