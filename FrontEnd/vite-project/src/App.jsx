@@ -8,6 +8,8 @@ import Signin from './Pages/Signin'
 import AdminDashboard from './Pages/AdminDashboard.jsx';
 import UserDashboard from './Pages/UserDashBoard.jsx';
 import StoreOwnerDashboard from './Pages/StoreDashboard.jsx';
+import UserList from './Pages/UserList.jsx';
+import StoreList from './Pages/StoreList.jsx'
 
 function App() {
 
@@ -21,6 +23,8 @@ function App() {
       <Route path='/admin-dashboard' element={<AdminDashboard/>}/>
       <Route path='/user-dashboard' element={<UserDashboard/>}/>
       <Route path='/storeOwner-dashboard' element={<StoreOwnerDashboard/>}/>
+      <Route path='/usersList' element={<UserList/>}/>
+      <Route path='/storesList' element={<StoreList/>}/>
     </Routes>
   )
 }
