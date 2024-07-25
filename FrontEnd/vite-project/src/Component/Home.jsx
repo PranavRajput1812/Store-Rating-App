@@ -1,7 +1,3 @@
-
-
-
-import React from 'react';
 import { Link } from 'react-router-dom'; // Make sure to install and use React Router for navigation
 import homeImage from '../assets/HomePageImage.jpg';
 
@@ -39,20 +35,7 @@ const Home = () => {
         <div className="flex flex-col justify-center w-1/2 p-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">Welcome to Store Rating App</h1>
           <p className="text-lg text-gray-600 mb-6">Rate and review your favorite stores with ease!</p>
-          {/* <div className="flex space-x-4">
-            <Link 
-              to="/signup"
-              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
-            >
-              Sign Up
-            </Link>
-            <Link 
-              to="/login"
-              className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition"
-            >
-              Login
-            </Link>
-          </div> */}
+          
         </div>
         <div className="w-1/2 flex items-center justify-center">
           <img 
