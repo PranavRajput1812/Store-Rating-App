@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axiosInstance from '../Helpers/axiosInstance';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation ,useNavigate } from 'react-router-dom';
 import { logout } from '../Redux/Slices/authSlice';
 
 
@@ -15,19 +15,18 @@ function StoreOwnerDashboard() {
     const { existingId } = location.state || {}
     
     console.log(existingId);
-    // const [averageRating, setAverageRating] = useState(0);
+
 
     const fetchStoreAndRatingsData = async () => {
         try {
-            // Fetch store data
+          
            
             const storeResponse = await axiosInstance.get(`/store/${existingId}/user`);
             console.log(storeResponse);
             setUserRatings(storeResponse.data.users);
             setStoreData(storeResponse.data.storeUser);
             console.log(storeResponse);
-            // Fetch user ratings for the store
-           
+  
 
            
         } catch (error) {
@@ -44,11 +43,27 @@ function StoreOwnerDashboard() {
         dispatch(logout());
         navigate('/');
       };
-
+      const handleChangePassword = () => {
+        navigate("/change-password");
+      };
 
 
     return (
         <div className='p-6 bg-gray-100 min-h-screen'>
+            <div className="flex space-x-4 justify-end">
+  <button
+    onClick={handleLogout}
+    className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition duration-200 mb-5"
+  >
+    Logout
+  </button>
+  <button
+    onClick={handleChangePassword}
+    className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-200 mb-5"
+  >
+    Change Password
+  </button>
+</div>
             <h1 className='text-2xl font-bold mb-6 text-center'>Store Owner Dashboard</h1>
 
             {storeData && (
@@ -75,7 +90,7 @@ function StoreOwnerDashboard() {
                             <tr>
                                 <th className='border p-2'>Name</th>
                                 <th className='border p-2'>Email</th>
-                                <th className='border p-2'>Rating</th>
+                                <th className='border p-2'>Address</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -83,7 +98,7 @@ function StoreOwnerDashboard() {
                                 <tr key={user._id}>
                                     <td className='border p-2'>{user.Name}</td>
                                     <td className='border p-2'>{user.email}</td>
-                                    <td className='border p-2'>{user.rating}</td>
+                                    <td className='border p-2'>{user.Address}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -94,12 +109,7 @@ function StoreOwnerDashboard() {
             </div>
 
             <div className='flex justify-center mt-6'>
-                <button
-                    onClick={handleLogout}
-                    className='bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded'
-                >
-                    Logout
-                </button>
+                
             </div>
         </div>
     );
